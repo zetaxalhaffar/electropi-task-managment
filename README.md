@@ -46,7 +46,7 @@ npm run mock-api   # run only the json-server mock API
 
 A full CRUD task management flow:
 
-- **Tasks list** (`/tasks`) — sortable, searchable table of tasks with filtering by status and title, using Nuxt UI's `UTable`.
+- **Tasks list** (`/tasks`) — sortable, searchable table of tasks with filtering by status and a debounced title search (via a custom `v-debounce` directive), using Nuxt UI's `UTable`.
 - **Create / edit task** — a shared dialog form (`TaskFromManager`) validated with a `zod` schema (required title, due date can't be in the past), used for both creating and editing.
 - **Task details** (`/tasks/[id]`) — a detail page showing description, progress, acceptance criteria, attachments, assignee, tags, and metadata (created/updated/completed dates, hours).
 - **Delete task** — with a reusable confirmation dialog (`GeneralConfirmationDialog`) before removing a task.
@@ -55,6 +55,7 @@ A full CRUD task management flow:
 - **State management** — a Pinia store (`useTaskStore`) wraps the API calls (`useTaskApi`) so components stay thin and just call store actions.
 - **API layer** — a small `$fetch`-based client (`useApiLayer` / `apiClient.ts`) with a configurable base URL and centralized request/response handling (e.g. hook point for 401s), so swapping the mock API for a real backend later only means changing `NUXT_PUBLIC_API_BASE`.
 - **Reusable UI building blocks** — `EditableTable`, `AppPageToolbar`, `UDialog`, and a shared `Header` layout component, kept generic so they aren't tied to tasks specifically.
+- **Custom directives** — a `v-debounce` directive (`app/directives/VDebounce.ts`), registered globally through a Nuxt plugin (`app/plugins/directives.ts`), used on the title search input to delay firing the search until typing pauses (600ms), instead of refetching on every keystroke.
 
 ## Why Nuxt / Nuxt UI
 
@@ -82,8 +83,10 @@ app/
 │   ├── useApiLayer.ts   # Shared $fetch client
 │   └── tasks/           # Task API composable
 ├── constant/apis/       # API endpoint constants
+├── directives/          # Custom Vue directives (e.g. v-debounce)
 ├── layouts/             # Nuxt layouts
 ├── pages/               # File-based routes (tasks list & details)
+├── plugins/             # Nuxt plugins (e.g. directive registration)
 ├── services/            # API client factory
 ├── stores/              # Pinia stores
 ├── types/               # Shared TypeScript types
