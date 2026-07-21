@@ -11,8 +11,8 @@
     <template #content>
       <UForm
         ref="formRef"
+        :schema="taskSchema"
         :state="state"
-        :validate="validate"
         class="flex flex-col gap-4"
         @submit="onSubmit"
       >
@@ -71,7 +71,8 @@
 </template>
 
 <script lang="ts" setup>
-import type { FormError, FormSubmitEvent } from "@nuxt/ui";
+import type { FormSubmitEvent } from "@nuxt/ui";
+import { z } from "zod";
 import UDialog from "~/components/shared/UDialog.vue";
 import { useTaskStore } from "~/stores/tasks";
 import type { Task, TaskPayload } from "~/types/tasks";
@@ -110,27 +111,29 @@ function emptyState(): Partial<TaskPayload> {
 
 const state = reactive<Partial<TaskPayload>>(emptyState());
 
-function validate(payload: Partial<TaskPayload>): FormError[] {
-  const errors: FormError[] = [];
+const taskSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+  description: z.string().optional(),
+  status: z.enum(["pending", "in_progress", "done"]).optional(),
+  priority: z.enum(["low", "medium", "high"]).optional(),
+  dueDate: z
+    .string()
+    .optional()
+    .refine(
+      (value) => {
+        if (!value) return true;
+        const dueDate = new Date(value);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return dueDate >= today;
+      },
+      { message: "Due date must be in the future" },
+    ),
+});
 
-  if (!payload.title) {
-    errors.push({ name: "title", message: "Title is required" });
-  }
+type TaskSchema = z.infer<typeof taskSchema>;
 
-  if (payload.dueDate) {
-    const dueDate = new Date(payload.dueDate);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    if (dueDate < today) {
-      errors.push({ name: "dueDate", message: "Due date must be in the future" });
-    }
-  }
-
-  return errors;
-}
-
-async function onSubmit(event: FormSubmitEvent<Partial<TaskPayload>>) {
+async function onSubmit(event: FormSubmitEvent<TaskSchema>) {
   isSubmitting.value = true;
   try {
     if (isEditMode.value && editingId.value) {

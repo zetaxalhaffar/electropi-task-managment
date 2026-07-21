@@ -1,41 +1,6 @@
 {
   "tasks": [
     {
-      "id": "2",
-      "title": "Create the task list page 123",
-      "description": "Build a page that displays tasks with title, status, priority, assignee, and due date.",
-      "status": "pending",
-      "priority": "high",
-      "dueDate": "2026-07-25",
-      "createdAt": "2026-07-18T10:15:00.000Z",
-      "updatedAt": "2026-07-18T10:15:00.000Z",
-      "assignee": {
-        "id": "user-2",
-        "name": "Sara Ahmed",
-        "email": "sara@example.com",
-        "avatar": "https://i.pravatar.cc/150?img=47"
-      },
-      "category": "Frontend",
-      "tags": [
-        "table",
-        "tasks",
-        "nuxt-ui"
-      ],
-      "estimatedHours": 8,
-      "completedHours": 0,
-      "progress": 0,
-      "details": "Use Nuxt UI's table component to display task information. The page should include sorting, filtering, pagination, and a search field.",
-      "acceptanceCriteria": [
-        "Tasks are displayed in a table",
-        "Users can search by title",
-        "Users can filter by status",
-        "Users can sort by due date",
-        "Pagination works correctly"
-      ],
-      "attachments": [],
-      "commentsCount": 1
-    },
-    {
       "id": "3",
       "title": "Implement task creation form",
       "description": "Create a form that allows users to add a new task to the application.",
@@ -392,6 +357,14 @@
       "priority": "medium",
       "dueDate": "2026-07-21",
       "id": "eclId88Op-8"
+    },
+    {
+      "title": "ghjk",
+      "description": "",
+      "status": "pending",
+      "priority": "medium",
+      "dueDate": "2026-07-21",
+      "id": "2CmmLpsJlbM"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

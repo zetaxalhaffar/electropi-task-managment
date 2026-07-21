@@ -6,17 +6,26 @@ interface Props {
   data: T[];
   columns: TableColumn<T>[];
   meta?: TableMeta<T>;
+  loading?: boolean;
 }
 
 const props = defineProps<Props>();
-const table = useTemplateRef("table")
+const table = useTemplateRef("table");
 
 defineExpose({
-  table
-})
-
+  table,
+});
 </script>
 
 <template>
-  <UTable ref="table" :data="data" :columns="columns" :meta="meta" class="flex-1" />
+  <UTable
+    :loading="loading"
+    loading-color="primary"
+    loading-animation="carousel"
+    ref="table"
+    :data="data"
+    :columns="columns"
+    :meta="meta"
+    class="flex-1"
+  />
 </template>

@@ -205,8 +205,10 @@ const taskId = route.params.id as string;
 const taskStore = useTaskStore();
 const { getTask, deleteTask } = taskStore;
 
-const { status, error, data } = await useAsyncData(`task-details-${taskId}`, () =>
-  getTask(taskId),
+const { status, error, data } = await useAsyncData(
+  `task-details-${taskId}`,
+  () => getTask(taskId),
+  { lazy: true },
 );
 const task = computed<Task | null>(() => data.value ?? null);
 

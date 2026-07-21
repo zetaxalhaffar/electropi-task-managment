@@ -18,12 +18,13 @@
           placeholder="Filter by status"
         />
         <UInput
-          v-model="titleFilter"
+          v-model="titleInput"
+          v-debounce="{ delay: 600, handler: handleChangeSearch }"
           class="max-w-sm"
           placeholder="Search by title..."
         />
       </div>
-      <EditableTable :columns="columns" :data="data ?? []" />
+      <EditableTable :loading="pending" :columns="columns" :data="data ?? []" />
     </div>
   </UContainer>
 </template>
@@ -60,9 +61,14 @@ const statusOptions = [
   { label: "Done", value: "done" },
 ];
 const statusFilter = ref<string>(ALL_STATUSES);
+const titleInput = ref<string>("");
 const titleFilter = ref<string>("");
 
-const { status, error, refresh, data } = await useAsyncData(
+function handleChangeSearch(value: string) {
+  titleFilter.value = value;
+}
+
+const { status, error, refresh, data, pending } = await useAsyncData(
   "tasks-list",
   () =>
     tasksList(
@@ -71,7 +77,7 @@ const { status, error, refresh, data } = await useAsyncData(
         "title:contains": titleFilter.value,
       }),
     ),
-  { watch: [statusFilter, titleFilter] },
+  { watch: [statusFilter, titleFilter], lazy: true },
 );
 
 // SECTION: Create/Edit task
