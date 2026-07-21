@@ -1,0 +1,11 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+@theme {
+  --font-sans: "Inter", sans-serif;
+  --color-primary: oklch(20.8% 0.042 265.755);
+}
+
+.main-border {
+  @apply border border-gray-200;
+}
